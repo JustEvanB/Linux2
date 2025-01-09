@@ -1,0 +1,40 @@
+Installing software is pretty straightforward, Debian makes use of a package manager which does
+most of the work for you! All we have to do is use the package manager on the command line.
+
+# Updating and Upgrading packages
+
+To update and upgrade all at the same time we can run the command:
+
+sudo apt-get update && sudo apt-get upgrade -y
+
+this will run both of the commands and -y just means that it will do it all for you without
+requiring a user input.
+
+# Installing packages
+
+NOTE: Before installing packages you should always update, and upgrade to ensure that
+apt is pulling and downloading the latest version of the application you are downloading
+
+To install an app is just one command, here we will install apt-file so we can use it later in the
+documentation:
+
+sudo apt-get install apt-file
+
+Then just follow along with the terminal and it should be installed.
+
+# apt-file
+
+apt-file is used to search for certain commands inside of packages, for example
+a common networking tool is ifconfig, however the package isn't called ifconfig it is called something else
+which we will find.
+
+Before we run apt-file we will run an update to generate a database of all the files for apt-file to search
+through:
+
+apt-file update
+
+Once this is run we can now run:
+
+apt-file search ifconfig
+
+Which will show us a list of every package that contains ifconfig: the one we are looking for is net-tools
