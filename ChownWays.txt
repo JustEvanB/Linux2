@@ -1,0 +1,18 @@
+File permissions are important, as such they should be set
+appropriatly, for example the user Evan, should have the home directory's permissions set
+to Evan as Owner and Evan as group (User's also have their own group under the same name)
+
+so for example /home/Michael/* should have the permissions set to Michael:Michael
+
+Now how to run the commands:
+
+For example you want to set everything inside of the /home/Evan directory to be owned and grouped with Evan,
+you would need to run the command:
+
+sudo chown Evan:Evan /home/Evan -R
+
+where Evan:Evan, the left Evan is the Owner, while the Evan after the colon is the Group.
+/home/Evan is the path to set the owners.
+-R is for recursion so everything inside the folder gets set with the same permissions.
+
+(Groups is important for sharing files/folders, remember you can also set group rwx permissions with chmod!)

@@ -1,0 +1,20 @@
+# Permissions		rwx Binary
+
+7 read, write, execute	rwx 111
+6 read, write		rw  110
+5 read, excecute	r-x 101
+4 read			r-- 100
+3 write, execute	-wx 011
+2 write			-w- 010
+1 execute		--x 001
+0 none			--- ---
+GROUPS: Owner->Group->Everyone
+
+EXAMPLE
+--------
+Owner RWX
+Group RW-
+Every --X
+---------
+111110001 | RWXRW---X
+
