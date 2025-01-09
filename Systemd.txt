@@ -1,0 +1,106 @@
+Systemd is quite the interesting process, it is service/process manager that allows you to automatically
+run commands whenever necessary.
+
+# Systemd Locations
+
+PRIMARY
+/etc/systemd/system - This is for all of the main systemd files
+
+BACKUP
+/lib/systemd/system - This is a backup for the primary
+
+RUNNING FILES
+/run/systemd/system - This is for files created at the runtime, this takes precedence over the PRIMARY
+
+Inside of these directories there are more subfolders to sort each of the service files,
+the main folder we will use is the multi-user.target.wants
+
+# Internals of a Service File
+
+Firstly to note every Service File has the extension of ".service" For this example we will
+be looking at sshd.service:
+
+[Unit]
+Description=OpenSSH Daemon
+Wants=sshdgenkeys.service
+After=sshdgenkeys.service
+After=network.target
+
+[Service]
+Type=notify-reload
+ExecStart=/usr/bin/sshd -D
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+# UNIT
+
+Lets look inside the [Unit] header.
+
+Description - Simply a description that will be shown when checking the status of sshd through systemctl
+{ Wants - A soft dependency that indiciates a service should be started after this one starts
+{ Requires - A hard dependency that indicates what this service would rely on
+Before - Specifies that this service should be run after another
+After - Specifies that this service should be run before another
+
+Note how sshd.service doesn't have everyone, for example you will only use Wants OR Requires, not both.
+you also don't need for example to use Before if this is the first service that will start other services.
+
+# SERVICE
+
+Type - {simple, forking, oneshot, dbus, notify, idle} - Each has it's own purpose 
+	Simple - This is the default if Type and BusName are not set
+	forking - Used for when the service forks a child, exiting the parent almost immediately
+	oneshot - Used for short-lived processes
+	dbus - This unit will take a name on the d-bus bus
+	notify - Indicates that this service will issue a notification when it has finished
+	idle - Will not run until all jobs are dispatched
+ExecStart - The command to be run as the service
+Restart - indicates when a process should be restarted (usually "always")
+
+# INSTALL
+
+There is many different options for the INSTALL section, although you usually only use one.
+
+WantedBy - Most common way to specify how it should be enabled, most commonly set to "multi-user.target"
+RequiredBy - Similar to WantedBy, but instead specifies a required dependency that will cause the service to fail if not met
+Alias - Allows the unit to be ran under another name
+Also - Allows the unit to be enabled or disabled as a set
+DefaultInstance - For template units
+
+
+# Using the CommandLine to start or enabled Services
+
+To start a service you will need to run the command:
+
+sudo systemctl start SERVICENAME
+
+NOTE: For services you start, whenever you restart the system, the service will no longer be running
+
+To enable a service (now) you will need to run the command:
+
+sudo systemctl enable --now SERVICENAME
+
+The "--now" means to start the service too as just enable will only start the service on reboot
+The service will now be permanently enabled until you manually disable it
+
+To stop a service you can run:
+
+sudo systemctl stop SERVICENAME
+
+Where it will only stop the service, if the service is enabled (as different to just started), then
+on next boot it will be running again
+
+to disable the service for good you can run:
+
+sudo systemctl disable --now SERVICENAME
+
+Where the service will no longer run until set to start manually
+
+# Check status on service
+
+To check the status, description, and logs of a service you can run:
+
+sudo systemctl status SERVICENAME
